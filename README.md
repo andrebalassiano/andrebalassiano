@@ -14,8 +14,8 @@ than what.
 
 ## superForum
 
-A Reddit-style forum with communities, posts, comments and voting. Two halves in one repo, deployed
-as two services.
+A Reddit-style forum with communities, posts, comments, voting and user profiles. Two halves in one
+repo, deployed as two services.
 
 **[Live demo](https://superforum.vercel.app)** ·
 **[Source](https://github.com/andrebalassiano/superForum)**
@@ -29,11 +29,14 @@ the code:
   isn't yours" answers 403 and "that doesn't exist" answers 404.
 - Vote counts are denormalized. The score moves as a delta inside the same transaction as the vote
   itself, and the client mirrors that with an optimistic update that patches every cached copy of
-  the post and puts the old values back if the request fails.
+  the post and puts the old values back if the request fails. A profile's reputation is the same
+  quantity summed over everything you've written, and it goes the other way: computed on read,
+  stored nowhere, because nothing sorts by it and a stored copy could only drift from the votes
+  behind it.
 - Pagination is cursor-based with a stable tiebreak and an index behind it. The client consumes it
   with infinite scroll.
-- 89 integration tests drive the real API against PostgreSQL in Docker, the client has its own suite
-  in React Testing Library, and both run in CI on every push.
+- 109 integration tests drive the real API against PostgreSQL in Docker, 37 more cover the client in
+  React Testing Library, and both suites run in CI on every push.
 
 But the part that taught me the most was deploying it. Three separate things broke, and not one of
 them could have broken on my machine.
@@ -52,4 +55,4 @@ work.
 ## Tools I reach for
 
 TypeScript, Node.js, Express, Prisma, PostgreSQL, Supabase, React, TanStack Query, React Router,
-Tailwind, Vitest, Supertest, Docker, GitHub Actions.
+Tailwind, Vitest, Supertest, React Testing Library, Docker, GitHub Actions.
